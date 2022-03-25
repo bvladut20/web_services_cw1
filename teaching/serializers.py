@@ -6,13 +6,14 @@ from teaching.models import Professor, Module, Rating
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'password']
+        fields = ['id', 'username', 'email', 'password']
         #extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
 
         user = User.objects.create_user(
             username=validated_data['username'],
+            email=validated_data['email'],
             password=validated_data['password'],
         )
         return user
@@ -24,7 +25,13 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'name']
 
 
-class ProfessorSerializer(serializers.HyperlinkedModelSerializer):
+class ProfessorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Professor
-        fields = ['url', 'name']
+        fields = ['id', 'name']
+
+
+class ModuleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Module
+        fields = ['id', 'name', 'professors', 'semester', 'year']

@@ -2,17 +2,19 @@ from django.db import models
 
 
 class Professor(models.Model):
+    code = models.CharField(max_length=5, blank=False, null=False)
     name = models.CharField(max_length=50)
     overall_rating = models.FloatField(null=True, blank=True)  # add Max and MinValueValidator
-    modules = models.ManyToManyField('Module', null=True, blank=True)
+    # modules = models.ManyToManyField('Module', null=True, blank=True)
 
     def __str__(self):
         return self.name
 
 
 class Module(models.Model):
+    code = models.CharField(max_length=5, blank=False, null=False)
     name = models.CharField(max_length=50)
-    professors = models.ManyToManyField('Professor', null=True, blank=True)
+    professors = models.ManyToManyField('Professor', blank=True)
     semester = models.IntegerField()
     year = models.IntegerField()
 
