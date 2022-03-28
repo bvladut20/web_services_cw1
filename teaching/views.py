@@ -85,23 +85,69 @@ class ModuleViewSet(viewsets.ModelViewSet):
 
 
 class RatingViewSet(viewsets.ModelViewSet):
-    # queryset = Rating.objects.all()
+    queryset = Rating.objects.all()
     serializer_class = RatingSerializer
     #permission_classes = (IsAuthenticated,)
 
-    # @action(detail=False, methods=['get'])
-    # def ratings_list(self, request):
-    #     if request.method == 'GET':
-    #         ratings = Rating.objects.all()
-    #         serializer = RatingSerializer(ratings, many=True)
-    #         return JsonResponse(serializer.data, safe=False)
+    # def get_queryset(self):
+    #     #queryset = Rating.objects.all()
+    #     queryset = self.queryset
+    #     #module_choice = self.request.query_params.get('module_id')
+    #     #professor_choice = self.request.query_params.get('professor_id')
+    #
+    #     module_choice = self.kwargs['module_id']
+    #     professor_choice = self.kwargs['professor_id']
+    #     if module_choice is not None and professor_choice is not None:
+    #         queryset = queryset.filter(module_id__exact=module_choice, professor_id__exact=professor_choice)
+    #     return queryset
 
-    def get_queryset(self):
-        queryset = Rating.objects.all()
-        #module_choice = self.request.query_params.get('module_id')
-        #professor_choice = self.request.query_params.get('professor_id')
-        module_choice = self.kwargs['module_id']
-        professor_choice = self.kwargs['professor_id']
-        if module_choice is not None and professor_choice is not None:
-            queryset = queryset.filter(module_id__exact=module_choice, professor_id__exact=professor_choice)
-        return queryset
+    @action(detail=False, methods=['get'])
+    def filtered_rating_list(self, request, *args, **kwargs):
+        if request.method == 'GET':
+            queryset = self.queryset
+            module_choice = self.kwargs['module_id']
+            professor_choice = self.kwargs['professor_id']
+            if module_choice is not None and professor_choice is not None:
+                queryset = queryset.filter(module_id__exact=module_choice, professor_id__exact=professor_choice)
+                serializer = RatingSerializer(queryset, many=True)
+                return JsonResponse(serializer.data, safe=False)
+
+
+    @action(detail=False, methods=['get'])
+    def all_ratings_list(self, request):
+        if request.method == 'GET':
+            queryset = self.queryset
+            serializer = RatingSerializer(queryset, many=True)
+            return JsonResponse(serializer.data, safe=False)
+
+    @action(detail=False, methods=['get'])
+    def average_rating(self, request, *args, **kwargs):
+        if request.method == 'GET':
+            queryset = self.queryset
+            module_choice = self.kwargs['module_id']
+            professor_choice = self.kwargs['professor_id']
+            if module_choice is not None and professor_choice is not None:
+                queryset = queryset.filter(module_id__exact=module_choice, professor_id__exact=professor_choice)
+                serializer = RatingSerializer(queryset, many=True)
+                new_data = 0.0
+                divisor = 0
+                for data in serializer.data:
+                    professor_check = 0
+                    module_check = 0
+                    rating_value = 0.0
+                    for key, value in data.items():
+                        if key == "value":
+                            rating_value = value
+                        if key == "professor":
+                            if value == professor_choice:
+                                professor_check = 1
+                        if key == "module":
+                            if value == module_choice:
+                                module_check = 1
+                        if professor_check == 1 and module_check == 1:
+                            new_data = new_data + rating_value
+                            divisor = divisor + 1
+
+                new_data = new_data / divisor
+                new_data = round(new_data, 2)
+                return JsonResponse(new_data, safe=False)
