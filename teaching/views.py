@@ -8,8 +8,10 @@ from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from django.contrib.auth import authenticate
-from .serializers import UserSerializer, GroupSerializer, ProfessorSerializer, ModuleSerializer
+from .serializers import UserSerializer, GroupSerializer, ProfessorSerializer, ModuleSerializer, RatingSerializer
 from teaching.models import Professor, Module, Rating
+from django.http import JsonResponse
+
 
 
 def index(request):
@@ -80,3 +82,26 @@ class ModuleViewSet(viewsets.ModelViewSet):
     queryset = Module.objects.all()
     serializer_class = ModuleSerializer
     permission_classes = (IsAuthenticated,)
+
+
+class RatingViewSet(viewsets.ModelViewSet):
+    # queryset = Rating.objects.all()
+    serializer_class = RatingSerializer
+    #permission_classes = (IsAuthenticated,)
+
+    # @action(detail=False, methods=['get'])
+    # def ratings_list(self, request):
+    #     if request.method == 'GET':
+    #         ratings = Rating.objects.all()
+    #         serializer = RatingSerializer(ratings, many=True)
+    #         return JsonResponse(serializer.data, safe=False)
+
+    def get_queryset(self):
+        queryset = Rating.objects.all()
+        #module_choice = self.request.query_params.get('module_id')
+        #professor_choice = self.request.query_params.get('professor_id')
+        module_choice = self.kwargs['module_id']
+        professor_choice = self.kwargs['professor_id']
+        if module_choice is not None and professor_choice is not None:
+            queryset = queryset.filter(module_id__exact=module_choice, professor_id__exact=professor_choice)
+        return queryset

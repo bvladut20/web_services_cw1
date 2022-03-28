@@ -28,10 +28,18 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class ProfessorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Professor
-        fields = ['id', 'name']
+        fields = ['id', 'code', 'name', 'overall_rating']
 
 
 class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Module
-        fields = ['id', 'name', 'professors', 'semester', 'year']
+        fields = ['id', 'code', 'name', 'professors', 'semester', 'year']
+
+
+class RatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating
+        fields = ['id', 'value', 'professor', 'module']
+
+

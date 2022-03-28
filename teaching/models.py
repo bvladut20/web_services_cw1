@@ -28,6 +28,6 @@ class Rating(models.Model):
     module = models.ForeignKey('Module', on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.value
+        return str(self.value)
 
 
