@@ -13,9 +13,9 @@ from teaching.models import Professor, Module, Rating
 from django.http import JsonResponse
 
 
-
 def index(request):
     return HttpResponse("Hey ur at the index page now")
+
 
 # test view
 class HelloView(APIView):
@@ -30,6 +30,12 @@ class UserCreate(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (AllowAny, )
+
+
+class RatingCreate(generics.CreateAPIView):
+    queryset = Rating.objects.all()
+    serializer_class = RatingSerializer
+    permission_classes = (IsAuthenticated,)
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -87,19 +93,7 @@ class ModuleViewSet(viewsets.ModelViewSet):
 class RatingViewSet(viewsets.ModelViewSet):
     queryset = Rating.objects.all()
     serializer_class = RatingSerializer
-    #permission_classes = (IsAuthenticated,)
-
-    # def get_queryset(self):
-    #     #queryset = Rating.objects.all()
-    #     queryset = self.queryset
-    #     #module_choice = self.request.query_params.get('module_id')
-    #     #professor_choice = self.request.query_params.get('professor_id')
-    #
-    #     module_choice = self.kwargs['module_id']
-    #     professor_choice = self.kwargs['professor_id']
-    #     if module_choice is not None and professor_choice is not None:
-    #         queryset = queryset.filter(module_id__exact=module_choice, professor_id__exact=professor_choice)
-    #     return queryset
+    permission_classes = (IsAuthenticated,)
 
     @action(detail=False, methods=['get'])
     def filtered_rating_list(self, request, *args, **kwargs):
@@ -111,7 +105,6 @@ class RatingViewSet(viewsets.ModelViewSet):
                 queryset = queryset.filter(module_id__exact=module_choice, professor_id__exact=professor_choice)
                 serializer = RatingSerializer(queryset, many=True)
                 return JsonResponse(serializer.data, safe=False)
-
 
     @action(detail=False, methods=['get'])
     def all_ratings_list(self, request):
@@ -151,3 +144,4 @@ class RatingViewSet(viewsets.ModelViewSet):
                 new_data = new_data / divisor
                 new_data = round(new_data, 2)
                 return JsonResponse(new_data, safe=False)
+

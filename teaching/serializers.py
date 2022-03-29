@@ -42,4 +42,6 @@ class RatingSerializer(serializers.ModelSerializer):
         model = Rating
         fields = ['id', 'value', 'professor', 'module']
 
+    def create(self, validated_data):
+        return Rating.objects.create(**validated_data)
 

@@ -8,7 +8,8 @@ class Professor(models.Model):
     # modules = models.ManyToManyField('Module', null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        str_repr = self.name + " (" + self.code + ")"
+        return str_repr
 
 
 class Module(models.Model):
@@ -19,7 +20,8 @@ class Module(models.Model):
     year = models.IntegerField()
 
     def __str__(self):
-        return self.name
+        str_repr = self.name + " (" + self.code + ") - " + str(self.year) + ", semester " + str(self.semester)
+        return str_repr
 
 
 class Rating(models.Model):
@@ -28,6 +30,7 @@ class Rating(models.Model):
     module = models.ForeignKey('Module', on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.value)
+        str_repr = str(self.value) + " - " + str(self.professor) + " - " + str(self.module)
+        return str_repr
 
 
