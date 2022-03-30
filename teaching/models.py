@@ -5,7 +5,8 @@ class Professor(models.Model):
     code = models.CharField(max_length=5, blank=False, null=False)
     name = models.CharField(max_length=50)
     overall_rating = models.FloatField(null=True, blank=True)  # add Max and MinValueValidator
-    # modules = models.ManyToManyField('Module', null=True, blank=True)
+    number_ratings = models.IntegerField(default=0)
+    total_ratings_sum = models.FloatField(default=0.0)
 
     def __str__(self):
         str_repr = self.name + " (" + self.code + ")"

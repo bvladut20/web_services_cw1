@@ -46,17 +46,6 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     #permission_classes = [permissions.IsAuthenticated]
 
-    # @action(detail=True, methods=['post'])
-    # def add_user(self, request):
-    #     user = self.get_object()
-    #     serializer = ProfessorSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         user.add_user(serializer.validated_data['username', 'password'])
-    #         user.save()
-    #         return Response({'status': 'added new user'})
-    #     else:
-    #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class GroupViewSet(viewsets.ModelViewSet):
     """
@@ -71,17 +60,6 @@ class ProfessorViewSet(viewsets.ModelViewSet):
     queryset = Professor.objects.all()
     serializer_class = ProfessorSerializer
     permission_classes = (IsAuthenticated,)
-
-    # @action(detail=True, methods=['post'])
-    # def add_professor(self, request):
-    #     professor = self.get_object()
-    #     serializer = ProfessorSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         professor.add_professor(serializer.validated_data['name'])
-    #         professor.save()
-    #         return Response({'status': 'added new professor'})
-    #     else:
-    #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ModuleViewSet(viewsets.ModelViewSet):
