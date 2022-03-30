@@ -1,10 +1,7 @@
-from django.http import HttpResponse
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.views import APIView
 from .serializers import UserSerializer, GroupSerializer, ProfessorSerializer, ModuleSerializer, RatingSerializer
 from teaching.models import Professor, Module, Rating
 from django.http import JsonResponse
