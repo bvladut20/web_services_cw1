@@ -1,29 +1,13 @@
 from django.http import HttpResponse
-
 from django.contrib.auth.models import User, Group
-from rest_framework import viewsets, status, generics
+from rest_framework import viewsets, generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.views import APIView
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from django.contrib.auth import authenticate
 from .serializers import UserSerializer, GroupSerializer, ProfessorSerializer, ModuleSerializer, RatingSerializer
 from teaching.models import Professor, Module, Rating
 from django.http import JsonResponse
-
-
-def index(request):
-    return HttpResponse("Hey ur at the index page now")
-
-
-# test view
-class HelloView(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request):
-        content = {'message', 'Hello World!'}
-        return Response(content)
 
 
 class UserCreate(generics.CreateAPIView):
